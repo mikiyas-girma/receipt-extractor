@@ -21,9 +21,10 @@ await server.start();
 
 
 app.use(cors({
-  origin: ['http://localhost:3000'],
+  origin: ['http://localhost:3000', 'http://localhost:8000'], // Adjust as needed for your frontend
   credentials: true
 }));
+
 app.use(bodyParser.json());
 app.use(graphqlUploadExpress());
 app.use('/graphql', expressMiddleware(server));
