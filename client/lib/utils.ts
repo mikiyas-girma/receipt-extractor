@@ -12,21 +12,26 @@ export function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffTime = Math.abs(now.getTime() - date.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+export function formatDate(dateInput: string | number): string {
+  let date: Date;
+  if (typeof dateInput === 'number' || /^\d{13}$/.test(dateInput)) {
+    date = new Date(Number(dateInput));
+  } else {
+    date = new Date(dateInput);
+  }
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays === 1) {
-    return 'Yesterday'
+    return 'Yesterday';
   } else if (diffDays < 7) {
-    return `${diffDays} days ago`
+    return `${diffDays} days ago`;
   } else {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
-    })
+      day: 'numeric',
+    });
   }
 }
