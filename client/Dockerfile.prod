@@ -1,0 +1,28 @@
+FROM node:lts-alpine
+
+
+RUN addgroup mike && adduser -S mike -G mike
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+RUN chown -R mike:mike /app
+
+USER mike
+RUN pnpm config set registry https://registry.npmmirror.com
+
+
+COPY --chown=mike:mike package.json pnpm-lock.yaml* ./
+
+# Install only production dependencies
+RUN pnpm install --prod
+
+
+COPY --chown=mike:mike . .
+
+
+RUN pnpm build
+
+EXPOSE 3000
+
+
+CMD ["pnpm", "start"]
