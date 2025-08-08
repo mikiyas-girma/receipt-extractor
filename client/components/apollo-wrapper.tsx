@@ -4,7 +4,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@ap
 import createUploadLink  from "apollo-upload-client/createUploadLink.mjs"
 
 const uploadLink = createUploadLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "http://localhost:4000/graphql",
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "http://localhost:5000/graphql",
 })
 
 const client = new ApolloClient({
