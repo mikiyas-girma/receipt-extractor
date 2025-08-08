@@ -10,6 +10,18 @@ const receiptResolvers = {
         include: { items: true },
         orderBy: { createdAt: 'desc' }
       });
+    },
+    receipt: async (_, { id }: { id: string }) => {
+      const receipt = await prisma.receipt.findUnique({
+        where: { id },
+        include: { items: true }
+      });
+
+      if (!receipt) {
+        throw new GraphQLError('Receipt not found');
+      }
+
+      return receipt;
     }
   },
   Mutation: {

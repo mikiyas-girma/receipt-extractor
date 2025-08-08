@@ -20,6 +20,7 @@ const typeDefs = `#graphql
 
   type Query {
     receipts: [Receipt!]!
+    receipt(id: String!): Receipt!
   }
 
   type Mutation {
