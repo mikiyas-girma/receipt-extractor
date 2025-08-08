@@ -2,25 +2,25 @@ FROM node:lts-alpine
 
 
 # Setup: enable pnpm and add non-root user
-RUN addgroup mike && adduser -S mike -G mike
+RUN addgroup mikiyas && adduser -S mikiyas -G mikiyas
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 
 # Set working directory
 WORKDIR /app
 
-RUN chown -R mike:mike /app
+RUN chown -R mikiyas:mikiyas /app
 
 
-USER mike
+USER mikiyas
 RUN pnpm config set registry https://registry.npmmirror.com
 
 # Copy 
-COPY --chown=mike:mike package.json pnpm-lock.yaml* ./
+COPY --chown=mikiyas:mikiyas package.json pnpm-lock.yaml* ./
 RUN pnpm install
 
 # Copy rest of the app
-COPY --chown=mike:mike . .
+COPY --chown=mikiyas:mikiyas . .
 
 EXPOSE 3000
 CMD ["pnpm", "dev"]

@@ -15,11 +15,14 @@ services:
   server:
     build: 
       context: ./server
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     env_file:
       - ./server/.env
+    volumes:
+      - ./server:/app
+      - /app/node_modules
     networks:
       - app-network
     depends_on:
@@ -30,11 +33,14 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     env_file:
       - ./client/.env
+    volumes:
+      - ./client:/app
+      - client_node_modules:/app/node_modules
     networks:
       - app-network
     restart: unless-stopped
@@ -46,3 +52,4 @@ networks:
 
 volumes:
   receipt-extractor:
+  client_node_modules:
