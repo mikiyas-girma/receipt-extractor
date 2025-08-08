@@ -1,0 +1,46 @@
+name: "receipt-extractor"
+services:
+  database:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - ./server/.env.prod
+    volumes:
+      - receipt-extractor:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prod
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./server/.env.prod
+    networks:
+      - app-network
+    depends_on:
+      - database
+    restart: unless-stopped
+    user: "node"
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./client/.env.prod
+    networks:
+      - app-network
+    restart: unless-stopped
+    user: "node"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  receipt-extractor:
