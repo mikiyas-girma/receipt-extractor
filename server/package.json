@@ -8,9 +8,11 @@
     "seed": "node --loader ts-node/esm prisma/seed.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "pnpm build && node dist/index.js",
-    "dev": "nodemon --watch .env --watch src --exec \"node --loader ts-node/esm\" src/index.ts"
+    "prisma:generate": "pnpm prisma generate",
+    "prisma:migrate": "pnpm prisma migrate deploy",
+    "build": "pnpm prisma:generate && tsc",
+    "start": "pnpm build && pnpm prisma:migrate && node dist/index.js",
+    "dev": "pnpm prisma:generate && nodemon --watch .env --watch src --exec \"node --loader ts-node/esm\" src/index.ts"
   },
   "keywords": [
     "graphql",

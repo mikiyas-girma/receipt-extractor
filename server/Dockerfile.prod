@@ -16,6 +16,9 @@ RUN pnpm install --prod
 
 COPY --chown=mike:mike . .
 
+# run prisma
+RUN pnpm prisma generate
+
 
 RUN pnpm build
 
@@ -27,4 +30,4 @@ USER mike
 EXPOSE 5000
 
 
-CMD ["pnpm", "start"]
+CMD ["sh", "-c", "pnpm prisma migrate deploy && pnpm start"]
