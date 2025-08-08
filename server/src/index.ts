@@ -5,6 +5,7 @@ import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import typeDefs from './schema.js';
+import resolvers from './resolvers/index.js';
 
 const app = express();
 
@@ -12,6 +13,7 @@ const app = express();
 // Apollo Server
 const server = new ApolloServer({
   typeDefs,
+  resolvers,
 });
 
 
@@ -19,7 +21,7 @@ await server.start();
 
 
 app.use(cors({
-  origin: ['http://localhost:8000'],
+  origin: ['http://localhost:3000'],
   credentials: true
 }));
 app.use(bodyParser.json());
