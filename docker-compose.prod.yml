@@ -1,23 +1,21 @@
-name: "receipt-extractor"
+name: "receipt-extractor-prod"
 services:
   database:
-    image: postgres:16-alpine
+    image: postgres:latest
     restart: unless-stopped
     env_file:
-      - ./server/.env.prod
+      - ./server/.env.production
     volumes:
       - receipt-extractor:/var/lib/postgresql/data
     networks:
       - app-network
 
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.prod
+    image: ${DOCKER_USERNAME}/receipt-extractor-server:${IMAGE_TAG}
     ports:
       - "5000:5000"
     env_file:
-      - ./server/.env.prod
+      - ./server/.env.production
     networks:
       - app-network
     depends_on:
@@ -26,13 +24,11 @@ services:
     user: "node"
 
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.prod
+    image: ${DOCKER_USERNAME}/receipt-extractor-client:${IMAGE_TAG}
     ports:
       - "3000:3000"
     env_file:
-      - ./client/.env.prod
+      - ./client/.env.production
     networks:
       - app-network
     restart: unless-stopped

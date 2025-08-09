@@ -1,28 +1,26 @@
 FROM node:lts-alpine
 
-
-RUN addgroup mike && adduser -S mike -G mike
+RUN addgroup mikiyas && adduser -S mikiyas -G mikiyas
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
-RUN chown -R mike:mike /app
+RUN chown -R mikiyas:mikiyas /app
 
-USER mike
+USER mikiyas
 RUN pnpm config set registry https://registry.npmmirror.com
 
+ARG CLIENT_ENV_FILE=.env.production
+COPY --chown=mikiyas:mikiyas ${CLIENT_ENV_FILE} .env.production
 
-COPY --chown=mike:mike package.json pnpm-lock.yaml* ./
-
-# Install only production dependencies
-RUN pnpm install --prod
+COPY --chown=mikiyas:mikiyas package.json pnpm-lock.yaml* ./
+RUN pnpm install
 
 
-COPY --chown=mike:mike . .
+COPY --chown=mikiyas:mikiyas . .
 
 
 RUN pnpm build
 
+
 EXPOSE 3000
-
-
 CMD ["pnpm", "start"]
