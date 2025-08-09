@@ -19,8 +19,13 @@ jobs:
         id: set_tag
         run: echo "image_tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -34,6 +39,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile.prod
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:${{ steps.set_tag.outputs.image_tag }}
             ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:latest
@@ -41,7 +47,6 @@ jobs:
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache
           cache-to: |
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache,mode=max
-          builder: ${{ steps.buildx.outputs.name }}
 
   build-client:
     runs-on: ubuntu-latest
@@ -53,8 +58,13 @@ jobs:
       - name: Create client .env file
         run: echo "${{ secrets.CLIENT_ENV }}" > client/.env.production
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -68,6 +78,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile.prod
           push: true
+          platforms: linux/amd64,linux/arm64
           build-args: |
             CLIENT_ENV_FILE=.env.production
           tags: |
@@ -77,7 +88,6 @@ jobs:
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache
           cache-to: |
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache,mode=max
-          builder: ${{ steps.buildx.outputs.name }}
 
   deploy:
     runs-on: ubuntu-latest
