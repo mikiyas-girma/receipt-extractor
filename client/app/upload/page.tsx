@@ -99,7 +99,7 @@ export default function UploadPage() {
                 onClick={handleReset}
                 className="text-primary hover:underline"
               >
-                Try again ...
+                Try again ......
               </button>
             </div>
           )}
