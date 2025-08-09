@@ -7,8 +7,8 @@ import { ApolloWrapper } from "@/components/apollo-wrapper"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Receipt OCR - Upload & Process Receipts",
-  description: "Upload receipt images and extract data using OCR technology",
+  title: "Receipt Extractor",
+  description: "Upload receipt images and extract data using OCR",
 }
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
           <div className="min-h-screen bg-background">
             <header className="border-b">
               <div className="container mx-auto px-4 py-4">
-                <h1 className="text-2xl font-bold">Receipt OCR</h1>
+                <h1 className="text-2xl font-bold"> - Receipt Extractor -</h1>
               </div>
             </header>
             <main className="container mx-auto px-4 py-8">

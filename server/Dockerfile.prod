@@ -9,7 +9,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-pnpm prisma generate && pnpm tsc
+RUN pnpm prisma generate && pnpm tsc
 
 EXPOSE 5000
 
