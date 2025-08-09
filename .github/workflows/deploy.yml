@@ -98,5 +98,7 @@ jobs:
             echo '${{ secrets.CLIENT_ENV }}' > client/.env.production && \
             export DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} && \
             IMAGE_TAG=${IMAGE_TAG} docker compose -f docker-compose.prod.yml down && \
+            docker system prune -f && \
+            docker image rm ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:latest ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:latest || true && \
             IMAGE_TAG=${IMAGE_TAG} DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} docker compose -f docker-compose.prod.yml pull --quiet && \
             IMAGE_TAG=${IMAGE_TAG} DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} docker compose -f docker-compose.prod.yml up -d --force-recreate"
