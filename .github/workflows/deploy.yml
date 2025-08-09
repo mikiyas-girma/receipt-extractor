@@ -5,21 +5,15 @@ on:
     branches:
       - main
   repository_dispatch:
-    types: [deploy]
+    types: [repository_dispatch]
   workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    outputs:
-      image_tag: ${{ steps.set_tag.outputs.image_tag }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set image tag
-        id: set_tag
-        run: echo "image_tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -28,31 +22,18 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push server image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./server
-          file: ./server/Dockerfile.prod
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:${{ steps.set_tag.outputs.image_tag }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache,mode=max
-
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:latest ./server
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:latest
       - name: Create client .env file
-        run: echo "${{ secrets.CLIENT_ENV }}" > client/.env.production
-
+        run: |
+          echo "${{ secrets.CLIENT_ENV }}" > client/.env.production
       - name: Build and push client image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./client
-          file: ./client/Dockerfile.prod
-          push: true
-          build-args: |
-            CLIENT_ENV_FILE=.env.production
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:${{ steps.set_tag.outputs.image_tag }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache,mode=max
+        run: |
+          docker build \
+            --build-arg CLIENT_ENV_FILE=.env.production \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:latest ./client
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,16 +43,12 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
-
       - name: Deploy on VPS
         run: |
-          IMAGE_TAG=${{ needs.build-and-push.outputs.image_tag }}
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "\
             docker login -u '${{ secrets.DOCKERHUB_USERNAME }}' -p '${{ secrets.DOCKERHUB_TOKEN }}' && \
             cd ~/receipt-extractor && \
             echo '${{ secrets.SERVER_ENV }}' > server/.env.production && \
             echo '${{ secrets.CLIENT_ENV }}' > client/.env.production && \
-            export DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} && \
-            export IMAGE_TAG=${IMAGE_TAG} && \
-            docker-compose -f docker-compose.prod.yml pull && \
-            docker-compose -f docker-compose.prod.yml up -d"
+            docker compose -f docker-compose.prod.yml pull && \
+            docker compose -f docker-compose.prod.yml up -d"
