@@ -32,7 +32,7 @@ export default function ReceiptDetailPage() {
       <div className="max-w-4xl mx-auto text-center space-y-4">
         <h1 className="text-2xl font-bold">Receipt Not Found</h1>
         <p className="text-muted-foreground">
-          The receipt you're looking for doesn't exist or has been removed.
+          The receipt you&apos;re looking for doesn&apos;t exist or has been removed.
         </p>
         <Button onClick={() => router.push("/upload")}>
           <ArrowLeft className="w-4 h-4 mr-2" />

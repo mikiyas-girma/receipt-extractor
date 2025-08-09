@@ -30,7 +30,7 @@ export function UploadZone({
   
   const [uploadReceipt] = useMutation<{ uploadReceipt: ReceiptData }>(UPLOAD_RECEIPT)
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = useCallback((file: File): string | null => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']
     const maxSize = 10 * 1024 * 1024 // 10MB
 
@@ -43,11 +43,12 @@ export function UploadZone({
     }
 
     return null
-  }
+  }, [])
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [simulatedProgress, setSimulatedProgress] = useState<number>(0);
 
-  const handleUpload = async (file: File) => {
+  const handleUpload = useCallback(async (file: File) => {
     const validation = validateFile(file)
     if (validation) {
       setValidationError(validation)
@@ -100,13 +101,28 @@ export function UploadZone({
       onError(errorMessage)
       toast.error(errorMessage || "An error occurred during upload")
     }
-  }
+  }, [
+    validateFile,
+    setValidationError,
+    onUploadStart,
+    setSimulatedProgress,
+    onUploadProgress,
+    uploadReceipt,
+    onUploadComplete,
+    onProcessingComplete,
+    onError
+  ]);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback((acceptedFiles: File[], fileRejections: import('react-dropzone').FileRejection[]) => {
     if (acceptedFiles.length > 0) {
       handleUpload(acceptedFiles[0])
+    } else if (fileRejections && fileRejections.length > 0) {
+      // Show validation error for rejected files
+      const reason = fileRejections[0]?.errors?.[0]?.message || "File rejected"
+      setValidationError(reason)
+      onError(reason)
     }
-  }, [])
+  }, [handleUpload, onError])
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     onDrop,

@@ -1,6 +1,6 @@
 "use client"
 
-import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client"
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import createUploadLink  from "apollo-upload-client/createUploadLink.mjs"
 
 const uploadLink = createUploadLink({
@@ -9,6 +9,8 @@ const uploadLink = createUploadLink({
     "apollo-require-preflight": "true",
   },
 })
+
+console.log("GraphQL Endpoint:", process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT)
 
 const client = new ApolloClient({
   link: uploadLink,

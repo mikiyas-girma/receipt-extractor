@@ -55,7 +55,7 @@ export default function UploadPage() {
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">Upload Receipt</h1>
         <p className="text-muted-foreground">
-          Upload your receipt image and we'll extract the data for you
+          Upload your receipt image
         </p>
       </div>
 

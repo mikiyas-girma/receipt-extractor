@@ -7,7 +7,6 @@ import { Calendar, Store, DollarSign, Package, Eye, RotateCcw } from 'lucide-rea
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ReceiptData } from "@/types/receipt"
 import { formatDate, formatCurrency } from "@/lib/utils"
 
@@ -27,7 +26,7 @@ export function ResultsDisplay({ data, onReset }: ResultsDisplayProps) {
         </div>
         <h3 className="text-lg font-semibold text-green-700">Processing Complete!</h3>
         <p className="text-muted-foreground">
-          We've successfully extracted data from your receipt
+          We&apos;ve successfully extracted data from your receipt
         </p>
       </div>
 
