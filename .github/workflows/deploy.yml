@@ -19,13 +19,16 @@ jobs:
         id: set_tag
         run: echo "image_tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push server image (with cache)
+      - name: Build and push server image
         uses: docker/build-push-action@v5
         with:
           context: ./server
@@ -34,8 +37,11 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:${{ steps.set_tag.outputs.image_tag }}
             ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache,mode=max
+          cache-from: |
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache
+          cache-to: |
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:buildcache,mode=max
+          builder: ${{ steps.buildx.outputs.name }}
 
   build-client:
     runs-on: ubuntu-latest
@@ -47,13 +53,16 @@ jobs:
       - name: Create client .env file
         run: echo "${{ secrets.CLIENT_ENV }}" > client/.env.production
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push client image (with cache)
+      - name: Build and push client image
         uses: docker/build-push-action@v5
         with:
           context: ./client
@@ -64,8 +73,11 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:${{ needs.build-server.outputs.image_tag }}
             ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache,mode=max
+          cache-from: |
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache
+          cache-to: |
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:buildcache,mode=max
+          builder: ${{ steps.buildx.outputs.name }}
 
   deploy:
     runs-on: ubuntu-latest
