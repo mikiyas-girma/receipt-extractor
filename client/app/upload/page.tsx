@@ -63,7 +63,7 @@ export default function UploadPage() {
         <CardHeader>
           <CardTitle>Receipt Upload</CardTitle>
           <CardDescription>
-            Drag and drop your receipt image or click to browse
+            Drag and drop your receipt image or click to Browse
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -99,7 +99,7 @@ export default function UploadPage() {
                 onClick={handleReset}
                 className="text-primary hover:underline"
               >
-                Try again
+                Try again ...
               </button>
             </div>
           )}
