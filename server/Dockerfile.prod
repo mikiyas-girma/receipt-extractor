@@ -2,32 +2,15 @@ FROM node:lts-alpine
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-
-RUN addgroup mike && adduser -S mike -G mike
-
 WORKDIR /app
 
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm install --frozen-lockfile
 
-COPY --chown=mike:mike package.json pnpm-lock.yaml* ./
+COPY . .
 
-# Install only production dependencies
-RUN pnpm install --prod
-
-
-COPY --chown=mike:mike . .
-
-# run prisma
-RUN pnpm prisma generate
-
-
-RUN pnpm build
-
-
-RUN chown -R mike:mike /app
-
-USER mike
+pnpm prisma generate && pnpm tsc
 
 EXPOSE 5000
 
-
-CMD ["sh", "-c", "pnpm prisma migrate deploy && pnpm start"]
+CMD ["sh", "-c", "pnpm prisma migrate deploy && node dist/index.js"]
