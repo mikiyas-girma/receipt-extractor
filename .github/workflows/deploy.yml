@@ -96,5 +96,7 @@ jobs:
             cd ~/receipt-extractor && \
             echo '${{ secrets.SERVER_ENV }}' > server/.env.production && \
             echo '${{ secrets.CLIENT_ENV }}' > client/.env.production && \
-            DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} IMAGE_TAG=${IMAGE_TAG} docker compose -f docker-compose.prod.yml pull && \
-            DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} IMAGE_TAG=${IMAGE_TAG} docker compose -f docker-compose.prod.yml up -d --force-recreate"
+            docker compose -f docker-compose.prod.yml down && \
+            docker image rm ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-server:latest ${{ secrets.DOCKERHUB_USERNAME }}/receipt-extractor-client:latest || true && \
+            DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} IMAGE_TAG=${IMAGE_TAG} docker compose -f docker-compose.prod.yml pull --quiet && \
+            DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} IMAGE_TAG=${IMAGE_TAG} docker compose -f docker-compose.prod.yml up -d"
