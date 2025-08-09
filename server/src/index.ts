@@ -21,7 +21,12 @@ await server.start();
 
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:8000'], // Adjust as needed for your frontend
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'https://shewaber.mikegirma.dev',
+    'https://www.shewaber.mikegirma.dev',
+  ],
   credentials: true
 }));
 
@@ -30,7 +35,7 @@ app.use(graphqlUploadExpress());
 app.use('/graphql', expressMiddleware(server));
 
 // Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const PORT = parseInt(process.env.PORT) || 5000;
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is ready at http://localhost:${PORT}/graphql`);
 });
