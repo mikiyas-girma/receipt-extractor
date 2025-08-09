@@ -9,6 +9,12 @@ services:
       - receipt-extractor:/var/lib/postgresql/data
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
 
   server:
     image: ${DOCKER_USERNAME}/receipt-extractor-server:${IMAGE_TAG}
@@ -19,7 +25,8 @@ services:
     networks:
       - app-network
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     restart: unless-stopped
     user: "node"
 
