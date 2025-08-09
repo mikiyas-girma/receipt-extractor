@@ -1,6 +1,8 @@
 node_modules
 .env
 .env*
+dist
+build
 
 /src/generated/prisma
 prisma/migrations/*
