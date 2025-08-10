@@ -3,37 +3,52 @@ import { prisma } from '../prisma.js';
 import { extractTextFromImage } from './ocrService.js';
 import { parseReceiptText } from './receiptParser.js';
 import { CloudinaryUploader } from './cloudinaryService.js';
+import { GraphQLError } from 'graphql';
 
 const cloudinaryUploader = new CloudinaryUploader();
 
 export async function processReceipt(buffer: Buffer) {
-  // 1. Upload to Cloudinary
-  const imageUrl = await cloudinaryUploader.uploadImageBuffer(buffer, {
-    folder: 'receipts',
-  });
+  try {
+    // 1. OCR
+    const rawText = await extractTextFromImage(buffer);
 
-  // 2. OCR
-  const rawText = await extractTextFromImage(imageUrl);
+    // 2. Parse
+    const parsed = parseReceiptText(rawText);
 
-  // 3. Parse
-  const parsed = parseReceiptText(rawText);
+    // Validate parsed data
+    if (!parsed.storeName || parsed.storeName === 'Unknown Store' || 
+        !parsed.totalAmount || parsed.items.length === 0) {
+      throw new GraphQLError('Could not extract meaningful data from the receipt image');
+    }
 
-  // 4. Save to DB
-  const receipt = await prisma.receipt.create({
-    data: {
-      storeName: parsed.storeName,
-      purchaseDate: parsed.purchaseDate,
-      totalAmount: parsed.totalAmount,
-      imageUrl,
-      items: {
-        create: parsed.items.map(item => ({
-          name: item.name,
-          quantity: item.quantity,
-        })),
+    // 3. Upload to Cloudinary only if OCR and parsing were successful
+    const imageUrl = await cloudinaryUploader.uploadImageBuffer(buffer, {
+      folder: 'receipts',
+    });
+
+    // 4. Save to DB
+    const receipt = await prisma.receipt.create({
+      data: {
+        storeName: parsed.storeName,
+        purchaseDate: parsed.purchaseDate,
+        totalAmount: parsed.totalAmount,
+        imageUrl,
+        items: {
+          create: parsed.items.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+          })),
+        },
       },
-    },
-    include: { items: true },
-  });
+      include: { items: true },
+    });
 
-  return receipt;
+    return receipt;
+  } catch (error) {
+    // Ensure any error is properly propagated
+    if (error instanceof GraphQLError) {
+      throw error;
+    }
+    throw new GraphQLError(error instanceof Error ? error.message : 'Failed to process receipt');
+  }
 }

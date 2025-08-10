@@ -20,7 +20,6 @@ class OCRService {
     }
 
     if (this.isInitializing) {
-      // Wait for initialization to complete
       while (this.isInitializing) {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
@@ -50,19 +49,24 @@ class OCRService {
     }
   }
 
-  public async extractText(imageUrl: string): Promise<string> {
+  public async extractText(input: Buffer | string): Promise<string> {
     try {
       const worker = await this.initializeWorker();
 
       console.log('Starting OCR recognition...');
-      const { data: { text } } = await worker.recognize(imageUrl);
-
+      const { data: { text } } = await worker.recognize(input);
+      console.log('text', text);
       console.log('OCR completed successfully, text length:', text.length);
+
+      // Validate that we got meaningful text
+      if (!text || text.trim().length < 10) {
+        throw new Error('OCR produced insufficient text content');
+      }
+
       return text;
 
     } catch (error) {
       console.error('OCR processing failed:', error);
-      // If worker failed, reset it for next attempt
       if (this.worker) {
         try {
           await this.worker.terminate();
@@ -89,13 +93,11 @@ class OCRService {
   }
 }
 
-// Export the singleton function that matches your current interface
-export async function extractTextFromImage(imageUrl: string): Promise<string> {
+export async function extractTextFromImage(input: Buffer | string): Promise<string> {
   const ocrService = OCRService.getInstance();
-  return ocrService.extractText(imageUrl);
+  return ocrService.extractText(input);
 }
 
-// Export function to manually clean up resources (call this on app shutdown)
 export async function terminateOCRService(): Promise<void> {
   const ocrService = OCRService.getInstance();
   await ocrService.terminate();
