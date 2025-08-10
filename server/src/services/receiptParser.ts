@@ -212,14 +212,55 @@ class EnhancedReceiptParser {
   }
 
   static parseTotal(lines: ProcessedLine[]): number {
-    const totalLines = lines.filter(line => line.type === 'total');
+    // First try to find the final total after tax
+    const finalTotalKeywords = [
+      'amount incl',
+      'amount including',
+      'total incl',
+      'grand total',
+      'final amount',
+      'amount payable',
+      'total payable',
+      'total due',
+      'amount due',
+      'net amount'
+    ];
+
+    // Look for final total first
+    for (const line of lines) {
+      const lowerLine = line.cleaned.toLowerCase();
+      if (finalTotalKeywords.some(keyword => lowerLine.includes(keyword))) {
+        const amountMatches = line.cleaned.match(/(\d+(?:\.\d{2})?)/g);
+        if (amountMatches) {
+          const amounts = amountMatches.map(match => parseFloat(match)).filter(num => !isNaN(num));
+          if (amounts.length > 0) {
+            return Math.max(...amounts);
+          }
+        }
+      }
+    }
+
+    // If no final total found, look for the last total-like line
+    const totalLines = lines.filter(line => {
+      const lowerLine = line.cleaned.toLowerCase();
+      return line.type === 'total' && 
+             !lowerLine.includes('sub') && // Exclude subtotal
+             !lowerLine.includes('tax') && // Exclude tax lines
+             !lowerLine.includes('gst') && // Exclude GST lines
+             !lowerLine.includes('vat');   // Exclude VAT lines
+    });
+
+    // Sort by position in receipt (later lines more likely to be final total)
+    totalLines.sort((a, b) => lines.indexOf(b) - lines.indexOf(a));
 
     for (const line of totalLines) {
-      // currency amounts
       const amountMatches = line.cleaned.match(/(\d+(?:\.\d{2})?)/g);
       if (amountMatches) {
-        // Usually the largest number on a total line is the actual total
-        const amounts = amountMatches.map(match => parseFloat(match)).filter(num => !isNaN(num));
+        const amounts = amountMatches.map(match => parseFloat(match))
+          .filter(num => !isNaN(num))
+          // Filter out unreasonably small amounts (like tax rates)
+          .filter(num => num > 1);
+        
         if (amounts.length > 0) {
           return Math.max(...amounts);
         }
@@ -227,13 +268,14 @@ class EnhancedReceiptParser {
     }
 
     // Fallback: look for the largest reasonable amount in the entire receipt
+    // but exclude amounts that look like tax rates (< 1)
     const allAmounts: number[] = [];
     for (const line of lines) {
-      const matches = line.cleaned.match(/\d+\.\d{2}/g);
+      const matches = line.cleaned.match(/\d+(?:\.\d{2})?/g);
       if (matches) {
         matches.forEach(match => {
           const amount = parseFloat(match);
-          if (amount > 0 && amount < 50000) {
+          if (amount > 1 && amount < 50000) { // Reasonable range for receipt totals
             allAmounts.push(amount);
           }
         });
@@ -282,8 +324,8 @@ class EnhancedReceiptParser {
 
           // Clean up item name
           name = name
-            .replace(/^\d+\s*/, '') // Remove leading numbers
-            .replace(/[^a-zA-Z0-9\s\-&']/g, ' ') // Keep only reasonable characters
+            .replace(/^\d+\s*/, '')
+            .replace(/[^a-zA-Z0-9\s\-&']/g, ' ')
             .replace(/\s+/g, ' ')
             .trim();
 
