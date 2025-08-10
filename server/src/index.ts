@@ -37,5 +37,5 @@ app.use('/graphql', expressMiddleware(server));
 // Start the server
 const PORT = parseInt(process.env.PORT) || 5000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is ready at http://localhost:${PORT}/graphql`);
+  console.log(`The Server is ready at http://localhost:${PORT}/graphql`);
 });

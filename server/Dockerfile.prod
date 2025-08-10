@@ -8,9 +8,9 @@ COPY package.json pnpm-lock.yaml* ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-
+RUN chmod +x /app/entrypoint.sh
 RUN pnpm prisma generate && pnpm tsc
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "pnpm prisma migrate deploy && node dist/index.js"]
+CMD ["/app/entrypoint.sh"]

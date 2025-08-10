@@ -12,7 +12,6 @@ const uploadLink = createUploadLink({
   },
 })
 console.log("NODE_ENV:", process.env.NEXT_PUBLIC_NODE_ENV)
-console.log("GraphQL Endpoint:", process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT)
 
 const client = new ApolloClient({
   link: uploadLink,
