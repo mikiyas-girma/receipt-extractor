@@ -13,7 +13,7 @@ export function OCRStatus() {
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Processing Receipt</h3>
         <p className="text-muted-foreground">
-          Our AI is extracting data from your receipt
+          extracting data from your receipt
         </p>
       </div>
       

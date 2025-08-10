@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation"
 import { useQuery } from "@apollo/client"
 import { useState } from "react"
 import Image from "next/image"
-import { ArrowLeft, Calendar, Store, DollarSign, Package } from 'lucide-react'
+import { ArrowLeft, Calendar, Store, Package } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -58,7 +58,7 @@ export default function ReceiptDetailPage() {
         <div>
           <h1 className="text-2xl font-bold">Receipt Details</h1>
           <p className="text-muted-foreground">
-            Uploaded {formatDate(receipt.createdAt)}
+            Uploaded
           </p>
         </div>
       </div>
@@ -114,7 +114,6 @@ export default function ReceiptDetailPage() {
               <div className="pt-2 border-t">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-muted-foreground" />
                     <span className="text-lg font-semibold">Total Amount</span>
                   </div>
                   <Badge variant="secondary" className="text-lg px-3 py-1">

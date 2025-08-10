@@ -49,14 +49,6 @@ export function ResultsDisplay({ data, onReset }: ResultsDisplayProps) {
                 <div className="absolute inset-0 bg-muted animate-pulse" />
               )}
             </div>
-            <div className="mt-3 flex gap-2">
-              <Button asChild variant="outline" size="sm" className="flex-1">
-                <Link href={`/receipt/${data.id}`}>
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Details
-                </Link>
-              </Button>
-            </div>
           </CardContent>
         </Card>
 
@@ -133,14 +125,14 @@ export function ResultsDisplay({ data, onReset }: ResultsDisplayProps) {
         </div>
       </div>
 
-      <div className="flex gap-3 justify-center">
-        <Button asChild>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Button asChild className="w-full sm:w-auto">
           <Link href={`/receipt/${data.id}`}>
             <Eye className="w-4 h-4 mr-2" />
             View Full Details
           </Link>
         </Button>
-        <Button variant="outline" onClick={onReset}>
+        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto">
           <RotateCcw className="w-4 h-4 mr-2" />
           Upload Another
         </Button>

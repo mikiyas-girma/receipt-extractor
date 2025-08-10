@@ -91,18 +91,6 @@ export default function UploadPage() {
               onReset={handleReset}
             />
           )}
-
-          {error && (
-            <div className="text-center">
-              <p className="text-destructive mb-4">{error}</p>
-              <button
-                onClick={handleReset}
-                className="text-primary hover:underline"
-              >
-                Try again ......
-              </button>
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>

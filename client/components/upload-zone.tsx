@@ -32,14 +32,14 @@ export function UploadZone({
 
   const validateFile = useCallback((file: File): string | null => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']
-    const maxSize = 10 * 1024 * 1024 // 10MB
+    const maxSize = 7 * 1024 * 1024 // 7MB
 
     if (!allowedTypes.includes(file.type)) {
       return 'Please upload a valid image file (JPG, JPEG, or PNG)'
     }
 
     if (file.size > maxSize) {
-      return 'File size must be less than 10MB'
+      return 'File size must be less than 7MB'
     }
 
     return null
@@ -99,7 +99,7 @@ export function UploadZone({
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload failed'
       onError(errorMessage)
-      toast.error(errorMessage || "An error occurred during upload")
+      toast.error("An error occurred during upload try again")
     }
   }, [
     validateFile,
@@ -163,7 +163,7 @@ export function UploadZone({
               Drag and drop your receipt image here, or click to browse
             </p>
             <p className="text-sm text-muted-foreground">
-              Supports JPG, JPEG, PNG (max 10MB)
+              Supports JPG, JPEG, PNG (max 7MB)
             </p>
           </div>
           
