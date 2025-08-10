@@ -103,10 +103,10 @@ jobs:
 
       - name: Sync Docker configuration files
         run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "mkdir -p ~/receipt-extractor/client ~/receipt-extractor/server"
           scp -o StrictHostKeyChecking=no docker-compose.prod.yml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/receipt-extractor/
           scp -o StrictHostKeyChecking=no client/Dockerfile.prod ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/receipt-extractor/client/
           scp -o StrictHostKeyChecking=no server/Dockerfile.prod ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/receipt-extractor/server/
-
       - name: Deploy on VPS
         run: |
           IMAGE_TAG=${GITHUB_SHA}
