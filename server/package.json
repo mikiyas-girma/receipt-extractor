@@ -1,18 +1,16 @@
 {
-  "name": "graphql-todo",
+  "name": "receipt-extractor",
   "version": "1.0.0",
-  "description": "learning graphql with prisma inside docker container",
+  "description": "receipt-extractor is for extracting information from receipts using OCR and image processing.",
   "type": "module",
   "main": "index.js",
-  "prisma": {
-    "seed": "node --loader ts-node/esm prisma/seed.ts"
-  },
   "scripts": {
     "prisma:generate": "pnpm prisma generate",
     "prisma:migrate": "pnpm prisma migrate deploy",
+    "prisma:migrate:dev": "pnpm prisma migrate dev",
     "build": "pnpm prisma:generate && tsc",
     "start": "pnpm build && pnpm prisma:migrate && node dist/index.js",
-    "dev": "pnpm prisma migrate dev && nodemon --watch .env --watch src --exec \"node --loader ts-node/esm\" src/index.ts"
+    "dev": "pnpm prisma:migrate:dev && nodemon --watch .env --watch src --exec \"node --loader ts-node/esm\" src/index.ts"
   },
   "keywords": [
     "graphql",
