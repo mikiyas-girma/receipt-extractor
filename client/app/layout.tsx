@@ -1,14 +1,16 @@
+import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google"
 import "./globals.css"
-import { Toaster } from "@/components/ui/sonner" // updated import
+import { Toaster } from "@/components/ui/sonner"
 import { ApolloWrapper } from "@/components/apollo-wrapper"
+import { MainNavigation } from "@/components/main-navigation"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Receipt Extractor",
-  description: "Upload receipt images and extract data using OCR",
+  title: "Receipt Extractor - Upload & Process Receipts",
+  description: "Upload receipt images and extract data using OCR technology",
 }
 
 export default function RootLayout({
@@ -21,14 +23,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <ApolloWrapper>
           <div className="min-h-screen bg-background">
+            <MainNavigation />
             <header className="border-b">
-              <div className="container mx-auto px-4 py-4">
-                <h1 className="text-2xl font-bold"> - Receipt Extractor -</h1>
-              </div>
             </header>
-            <main className="container mx-auto px-4 py-8">
-              {children}
-            </main>
+            <main className="container mx-auto px-4 py-8">{children}</main>
           </div>
           <Toaster richColors />
         </ApolloWrapper>
