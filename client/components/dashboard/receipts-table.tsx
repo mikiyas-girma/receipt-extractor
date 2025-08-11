@@ -34,26 +34,28 @@ export function ReceiptsTable({ data }: ReceiptsTableProps) {
     }
   }
 
-  const sortedData = [...data].sort((a, b) => {
-    let aValue: any = a[sortField]
-    let bValue: any = b[sortField]
+  const sortedData = [...data].sort((a, b) => { 
+    const aValue = a[sortField]
+    const bValue = b[sortField]
 
     if (sortField === "purchaseDate") {
-      aValue = new Date(aValue || 0).getTime()
-      bValue = new Date(bValue || 0).getTime()
-    } else if (sortField === "totalAmount") {
-      aValue = aValue || 0
-      bValue = bValue || 0
-    } else {
-      aValue = (aValue || "").toLowerCase()
-      bValue = (bValue || "").toLowerCase()
+      const aDate = new Date(aValue || 0).getTime()
+      const bDate = new Date(bValue || 0).getTime()
+      return sortDirection === "asc" ? aDate - bDate : bDate - aDate
+    } 
+    
+    if (sortField === "totalAmount") {
+      const aAmount = Number(aValue || 0)
+      const bAmount = Number(bValue || 0)
+      return sortDirection === "asc" ? aAmount - bAmount : bAmount - aAmount
     }
-
-    if (sortDirection === "asc") {
-      return aValue > bValue ? 1 : -1
-    } else {
-      return aValue < bValue ? 1 : -1
-    }
+    
+    // Handle string comparison (storeName)
+    const aString = String(aValue || "").toLowerCase()
+    const bString = String(bValue || "").toLowerCase()
+    return sortDirection === "asc" 
+      ? aString.localeCompare(bString)
+      : bString.localeCompare(aString)
   })
 
   if (isMobile) {
@@ -93,7 +95,14 @@ export function ReceiptsTable({ data }: ReceiptsTableProps) {
             <TableRow key={receipt.id}>
               <TableCell>
                 <div className="relative w-12 h-12 rounded-md overflow-hidden bg-muted">
-                  <Image src={receipt.imageUrl || "/placeholder.svg"} alt="Receipt" fill className="object-cover" />
+                  <Image
+                    src={receipt.imageUrl || "/placeholder.svg"}
+                    alt="Receipt"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    priority={false}
+                    className="object-cover"
+                  />
                 </div>
               </TableCell>
               <TableCell className="font-medium">{receipt.storeName || "Unknown Store"}</TableCell>

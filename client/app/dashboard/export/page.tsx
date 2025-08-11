@@ -174,7 +174,11 @@ function ExportContent() {
               {receipts.slice(0, 10).map((receipt) => (
                 <div key={receipt.id} className="grid grid-cols-4 gap-4 text-sm py-2">
                   <span className="truncate">{receipt.storeName || "Unknown"}</span>
-                  <span>{receipt.purchaseDate ? new Date(receipt.purchaseDate).toLocaleDateString() : "Unknown"}</span>
+                  <span>{receipt.purchaseDate ? new Date(parseInt(receipt.purchaseDate)).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: '2-digit'
+                  }) : "Unknown"}</span>
                   <span>${receipt.totalAmount?.toFixed(2) || "0.00"}</span>
                   <span>{receipt.items?.length || 0} items</span>
                 </div>

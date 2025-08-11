@@ -39,8 +39,8 @@ export function ExportDialog({ open, onOpenChange, data }: ExportDialogProps) {
       })
 
       onOpenChange(false)
-    } catch (error) {
-
+    }
+    catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
       toast.error("Export failed", {
         description: "There was an error exporting your data.",
       })

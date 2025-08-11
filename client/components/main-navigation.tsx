@@ -67,7 +67,7 @@ export function MainNavigation() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2">
-              <Receipt className="w-6 h-6" />
+              {/* <Receipt className="w-6 h-6" /> */}
               <span className="font-bold text-xl">Receipt Extractor</span>
             </Link>
 

@@ -55,7 +55,6 @@ class OCRService {
 
       console.log('Starting OCR recognition...');
       const { data: { text } } = await worker.recognize(input);
-      console.log('text', text);
       console.log('OCR completed successfully, text length:', text.length);
 
       // Validate that we got meaningful text

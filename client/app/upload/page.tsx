@@ -13,6 +13,7 @@ export default function UploadPage() {
   const [isUploading, setIsUploading] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [receiptData, setReceiptData] = useState<ReceiptData | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null)
 
   const handleUploadStart = () => {
