@@ -51,8 +51,18 @@ CLOUDINARY_API_KEY=''
 CLOUDINARY_SECRET=''
 ```
 
+## Install Dependencies
+
+```bash
+pnpm install
+```
+## Run the Server
+To start the development server, use:
+```bash
+pnpm dev
+```
 ## 🐳 Docker Usage
-To run the frontend in a Docker container, use the following command:
+To run the server in a Docker container, use the following command:
 
 ```bash
 

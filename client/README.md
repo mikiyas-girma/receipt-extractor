@@ -36,7 +36,18 @@ NEXT_PUBLIC_NODE_ENV='development'
 NEXT_PUBLIC_GRAPHQL_ENDPOINT='http://localhost:5000/graphql'
 ```
 
-## 🐳 Docker Usage
+## Install Dependencies
+```bash
+pnpm install
+```
+## Run the Development Server
+```bash
+pnpm dev
+```
+
+Then, access the frontend at `http://localhost:3000`.
+
+## 🐳 Or with Docker Usage
 To run the frontend in a Docker container, use the following command:
 
 ```bash

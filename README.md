@@ -2,7 +2,8 @@
 
 A sample test project for scanning supermarket or restaurant receipts, extracting structured data (store name, date, total amount, items), and storing results in a database.  
 The system uses **Tesseract.js** for OCR, **Cloudinary** for image storage, and **Apollo GraphQL + Prisma** for data management.  
-Frontend built with **Next.js + TypeScript + shadcn/ui**.
+after you successfully run the application, you can upload a receipt image and it will extract the data and store it in the database. for testing purposes, you can use the provided sample receipt image in the `/assets` folder.
+
 
 ---
 
