@@ -123,21 +123,17 @@ docker-compose up --build -d
 - Apollo Server: [http://localhost:5000/graphql](http://localhost:5000/graphql)
 
 
-### 5️⃣ Simply you can also pull the image from docker hub & run it
-Make sure you have Docker & Docker Compose installed and running, 
-then execute the following command to pull the image:
 
-#### Pull the frontend image
-```bash
-docker pull michah16/receipt-extractor-client
-```
-
-#### Pull the backend image
-```bash
-docker pull michah16/receipt-extractor-server
-```
-
-#### Run the application with docker-compose from the root of the repository folder
-```bash
-docker-compose up --build
-```
+### 5️⃣ Quick Start (Recommended)
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/mikiyas-girma/receipt-extractor.git
+   cd receipt-extractor
+   ```
+2. Create the required `.env` files in both the `/client` and `/server` folders (see above for variable examples).
+3. Make sure Docker & Docker Compose are installed and running.
+4. From the root directory, run:
+   ```bash
+   docker-compose up --build
+   ```
+That's it! The application will build and start both the frontend and backend containers as defined in `docker-compose.yml`.
