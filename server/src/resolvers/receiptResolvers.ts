@@ -6,8 +6,28 @@ import { validateImageUpload } from '../utils/fileValidator.js';
 
 const receiptResolvers = {
   Query: {
-    receipts: async () => {
+    receipts: async (_, { startDate, endDate, storeName }: { startDate?: string; endDate?: string; storeName?: string }) => {
+      const where: any = {};
+
+      if (startDate || endDate) {
+        where.purchaseDate = {};
+        if (startDate) {
+          where.purchaseDate.gte = new Date(startDate);
+        }
+        if (endDate) {
+          where.purchaseDate.lte = new Date(endDate);
+        }
+      }
+
+      if (storeName) {
+        where.storeName = {
+          contains: storeName,
+          mode: 'insensitive'
+        };
+      }
+
       return await prisma.receipt.findMany({
+        where,
         include: { items: true },
         orderBy: { createdAt: 'desc' }
       });

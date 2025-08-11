@@ -19,7 +19,7 @@ const typeDefs = `#graphql
   }
 
   type Query {
-    receipts: [Receipt!]!
+    receipts(startDate: String, endDate: String, storeName: String): [Receipt!]!
     receipt(id: String!): Receipt!
   }
 
