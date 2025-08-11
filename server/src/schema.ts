@@ -20,7 +20,7 @@ const typeDefs = `#graphql
 
   type Query {
     receipts(startDate: String, endDate: String, storeName: String): [Receipt!]!
-    receipt(id: String!): Receipt!
+    receipt(id: ID!): Receipt!
   }
 
   type Mutation {
