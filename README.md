@@ -53,13 +53,13 @@ Frontend built with **Next.js + TypeScript + shadcn/ui**.
 <!-- ![System Architecture](./root_readme_architecture.png) -->
 
 **Flow Overview:**
-1. User uploads receipt from the Next.js frontend.
-2. Apollo GraphQL API receives the file and uploads it to Cloudinary.
-3. Cloudinary stores the image and provides a public URL.
-4. Tesseract.js processes the image and extracts text.
-5. Parsing logic structures the data (store, date, total, items).
-6. Prisma saves structured data into PostgreSQL.
-7. Frontend queries and displays results.
+1. User uploads a receipt image from the Next.js frontend.
+2. Apollo GraphQL API receives and validates the image.
+3. The validated image is processed by Tesseract.js OCR to extract text.
+4. Parsing logic structures the extracted data (store, date, total, items).
+5. If parsing is successful, structured data is saved to PostgreSQL via Prisma.
+6. The image is then uploaded to Cloudinary for storage.
+7. Frontend queries and displays the results.
 
 ---
 
@@ -77,17 +77,22 @@ Frontend built with **Next.js + TypeScript + shadcn/ui**.
 ```bash
 git clone https://github.com/mikiyas-girma/receipt-extractor.git
 cd receipt-extractor
-
+```
 2️⃣ Create .env files
-/client/.env
+
+---
+
+/client/.env with the following variables:
 ```env
 NEXT_PUBLIC_API_URL=''
 NEXT_NODE_ENV=''
 NEXT_PUBLIC_GRAPHQL_ENDPOINT=''
 ```
 
-/server/.env
+/server/.env with the following variables:
 ```env
+PORT=5000
+
 # Database
 POSTGRES_USER=''
 POSTGRES_PASSWORD=''
@@ -101,16 +106,37 @@ CLOUDINARY_NAME=''
 CLOUDINARY_API_KEY=''
 CLOUDINARY_SECRET=''
 
-# dockerhub
-DOCKERHUB_USERNAME=''
-DOCKERHUB_TOKEN=''
-
 ```
 ### 3️⃣ Start the application
+#### be sure to run this command from the root of the repository folder
 ```bash
 docker-compose up --build
 ```
 or in detached mode
 ```bash
 docker-compose up --build -d
+```
+
+### 4️⃣ Access the application
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Apollo Server: [http://localhost:5000/graphql](http://localhost:5000/graphql)
+
+
+### 5️⃣ Simply you can also pull the image from docker hub & run it
+Make sure you have Docker & Docker Compose installed and running, 
+then execute the following command to pull the image:
+
+#### Pull the frontend image
+```bash
+docker pull michah16/receipt-extractor-client
+```
+
+#### Pull the backend image
+```bash
+docker pull michah16/receipt-extractor-server
+```
+
+#### Run the application with docker-compose from the root of the repository folder
+```bash
+docker-compose up --build
 ```

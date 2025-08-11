@@ -1,4 +1,4 @@
-# Receipt Extractor Backend (Apollo GraphQL + Prisma + Tesseract.js)
+# Receipt Extractor Backend
 
 This is the **Node.js + Apollo Server** backend for processing receipt images, performing OCR with **Tesseract.js**, parsing structured data, and storing results in PostgreSQL.
 
@@ -27,11 +27,16 @@ This is the **Node.js + Apollo Server** backend for processing receipt images, p
 - Tesseract.js (OCR)
 
 ---
+To run the server, navigate to the `server` directory
+---
+create a `.env` file with the following variables:
 
 ## 📦 Environment Variables
 
 **`.env`**
 ```env
+PORT=5000
+
 # Database
 POSTGRES_USER=''
 POSTGRES_PASSWORD=''
@@ -44,24 +49,19 @@ DATABASE_URL=''
 CLOUDINARY_NAME=''
 CLOUDINARY_API_KEY=''
 CLOUDINARY_SECRET=''
-
-```
-
-
----
-
-## 📜 Scripts
-
-```bash
-pnpm dev                 # Start dev server with hot reload
-pnpm build               # Compile TypeScript & generate Prisma client
-pnpm start               # Run compiled code
-pnpm prisma:generate     # Generate Prisma client
-pnpm prisma:migrate      # Apply DB migrations
 ```
 
 ## 🐳 Docker Usage
+To run the frontend in a Docker container, use the following command:
+
 ```bash
-docker-compose up --build server
+
+docker build -t receipt-extractor-server .
 ```
 
+Then, start the container with:
+
+```bash
+docker run -p 5000:5000 receipt-extractor-server
+```
+Then, access the graphql apollo server at `http://localhost:5000/graphql`.

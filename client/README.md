@@ -1,4 +1,4 @@
-# Receipt Extractor Frontend (Next.js + shadcn/ui)
+# Receipt Extractor Frontend
 
 This is the **Next.js + TypeScript** frontend for uploading receipt images and displaying extracted OCR results from the GraphQL backend.
 
@@ -11,6 +11,7 @@ This is the **Next.js + TypeScript** frontend for uploading receipt images and d
 - Upload progress bar
 - OCR processing status indicators
 - Results display (store name, date, total, items)
+- Dashboard pages for viewing all receipts images, display stored parsed data and export options
 
 ---
 
@@ -23,26 +24,29 @@ This is the **Next.js + TypeScript** frontend for uploading receipt images and d
 
 ---
 
-## 📦 Environment Variables
-To run the frontend, create a `.env` file in the client directory with the following variables:
+To run the frontend, navigate to the `client` directory
+---
+create a `.env` file with the following variables:
 
+## 📦 Environment Variables
+
+```bash
 ```env
-NEXT_PUBLIC_NODE_ENV=''
-NEXT_PUBLIC_GRAPHQL_ENDPOINT=''
+NEXT_PUBLIC_NODE_ENV='development'
+NEXT_PUBLIC_GRAPHQL_ENDPOINT='http://localhost:5000/graphql'
 ```
 
 ## 🐳 Docker Usage
 To run the frontend in a Docker container, use the following command:
 
 ```bash
-docker-compose up --build client
+
+docker build -t receipt-extractor-client .
 ```
 
-## 📂 Folder Structure
+Then, start the container with:
+
 ```bash
-client/
-├── app/
-├── ├── upload/
-├── ├── receipt/[id]
-├── components/
-├── ├── ui/
+docker run -p 3000:3000 receipt-extractor-client
+```
+Then, access the frontend at `http://localhost:3000`.
